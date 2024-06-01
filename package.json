@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+<<<<<<< HEAD
     "start": "nodemon app.js",
     "build":"npm i"
     
+=======
+    "start": "nodemon app.js"
+>>>>>>> 97976f7b0add8556c665c19e90bc85ecfe21edd5
   },
   "author": "",
   "license": "ISC",
