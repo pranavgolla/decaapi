@@ -11,9 +11,8 @@ dotenv.config(); // Load environment variables
 // console.log('EMAIL_USER:', process.env.EMAIL_USER);
 // console.log('EMAIL_PASS:', process.env.EMAIL_PASS);
 // console.log('JWT_SECRET:', process.env.JWT_SECRET);
- 
 const app = express();
-
+ 
 // Connect to MongoDB
 connectDB();
 

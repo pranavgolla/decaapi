@@ -5,19 +5,14 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-<<<<<<< HEAD
     "start": "nodemon app.js",
-    "build":"npm i"
-    
-=======
-    "start": "nodemon app.js"
->>>>>>> 97976f7b0add8556c665c19e90bc85ecfe21edd5
+    "build": "npm i"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "assert": "^2.1.0",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
