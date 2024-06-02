@@ -132,3 +132,81 @@ exports.login = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+
+
+exports.forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        let user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ msg: 'User not found' });
+        }
+
+        // Generate OTP
+        const otp = crypto.randomBytes(3).toString('hex');
+        const otpExpires = Date.now() + 3600000; // 1 hour
+
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+
+        await user.save();  // Save the user before sending the email
+
+        // Send OTP email
+        sendMail(email, 'Password Reset OTP', `Your OTP code is ${otp}`);
+
+        res.status(200).json({ msg: 'OTP sent to email' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.getOtp = async (req, res) => {
+    try {
+        const { email } = req.body;
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ msg: 'User not found' });
+        }
+
+        res.status(200).json({
+            otp: user.otp,
+            otpExpires: user.otpExpires
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
+
+exports.resetPassword = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+
+        let user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(400).json({ msg: 'User not found' });
+        }
+
+
+        // Hash the password
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+
+        user.otp = undefined;
+        user.otpExpires = undefined;
+
+        await user.save();
+
+        res.status(200).json({ msg: 'Password reset successfully' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};
