@@ -2,7 +2,7 @@ const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 require('dotenv').config();  // Ensure environment variables are loaded
 
 const transporter = nodemailer.createTransport({
@@ -41,8 +41,8 @@ exports.register = async (req, res) => {
         }
 
         // Generate OTP
-        const otp = crypto.randomBytes(3).toString('hex');
-        const otpExpires = Date.now() + 3600000; // 1 hour
+        const otp = Math.floor(100000 + Math.random() * 900000).toString()
+        const otpExpires = Date.now() + 120000; // 2 minutes
 
         user = new User({
             firstname,
@@ -145,8 +145,8 @@ exports.forgotPassword = async (req, res) => {
         }
 
         // Generate OTP
-        const otp = crypto.randomBytes(3).toString('hex');
-        const otpExpires = Date.now() + 3600000; // 1 hour
+        const otp = Math.floor(100000 + Math.random() * 900000).toString()
+        const otpExpires = Date.now() + 120000; // 2 minutes
 
         user.otp = otp;
         user.otpExpires = otpExpires;
