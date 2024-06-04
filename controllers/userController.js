@@ -37,7 +37,7 @@ exports.register = async (req, res) => {
         // Check if user already exists
         let user = await User.findOne({ email });
         if (user) {
-            return res.status(400).json({ msg: 'User already exists' });
+            return res.status(400).json({ msg: 'User already exists',errorCode: "203", });
         }
 
         // Generate OTP
@@ -57,7 +57,7 @@ exports.register = async (req, res) => {
         // Send OTP email
         sendMail(email, 'OTP Verification', `Your OTP code is ${otp}`);
 
-        res.status(200).json({ msg: 'OTP sent to email' });
+        res.status(200).json({ msg: 'OTP sent to email', errorCode: "200" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -69,17 +69,17 @@ exports.verifyOtp = async (req, res) => {
         const { email, otp, password, confirmPassword } = req.body;
 
         if (password !== confirmPassword) {
-            return res.status(400).json({ msg: 'Passwords do not match' });
+            return res.status(400).json({ msg: 'Passwords do not match',errorCode: "203" });
         }
 
         let user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.status(400).json({ msg: 'User not found',errorCode: "203" });
         }
 
         if (user.otp !== otp || user.otpExpires < Date.now()) {
-            return res.status(400).json({ msg: 'OTP is invalid or has expired' });
+            return res.status(400).json({ msg: 'OTP is invalid or has expired',errorCode: "203" });
         }
 
         // Hash the password
@@ -91,7 +91,7 @@ exports.verifyOtp = async (req, res) => {
 
         await user.save();
 
-        res.status(200).json({ msg: 'Password set successfully' });
+        res.status(200).json({ msg: 'Password set successfully',errorCode: "200" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -104,12 +104,12 @@ exports.login = async (req, res) => {
 
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ msg: 'Invalid credentials',errorCode: "203" });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
+            return res.status(400).json({ msg: 'Invalid credentials',errorCode: "203" });
         }
 
         const payload = {
@@ -141,7 +141,7 @@ exports.forgotPassword = async (req, res) => {
 
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.status(400).json({ msg: 'User not found',errorCode: "203" });
         }
 
         // Generate OTP
@@ -156,7 +156,7 @@ exports.forgotPassword = async (req, res) => {
         // Send OTP email
         sendMail(email, 'Password Reset OTP', `Your OTP code is ${otp}`);
 
-        res.status(200).json({ msg: 'OTP sent to email' });
+        res.status(200).json({ msg: 'OTP sent to email',errorCode: "200" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
@@ -170,7 +170,7 @@ exports.getOtp = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.status(400).json({ msg: 'User not found',errorCode: "203" });
         }
 
         res.status(200).json({
@@ -191,7 +191,7 @@ exports.resetPassword = async (req, res) => {
         let user = await User.findOne({ email });
 
         if (!user) {
-            return res.status(400).json({ msg: 'User not found' });
+            return res.status(400).json({ msg: 'User not found',errorCode: "203" });
         }
 
 
@@ -204,7 +204,7 @@ exports.resetPassword = async (req, res) => {
 
         await user.save();
 
-        res.status(200).json({ msg: 'Password reset successfully' });
+        res.status(200).json({ msg: 'Password reset successfully',errorCode: "200" });
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
