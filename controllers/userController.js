@@ -32,7 +32,7 @@ const sendMail = (to, subject, text) => {
 
 exports.register = async (req, res) => {
     try {
-        const { firstname, lastname, email } = req.body;
+        const { firstname, lastname, email, mobile } = req.body;
 
         // Check if user already exists
         let user = await User.findOne({ email });
@@ -48,6 +48,7 @@ exports.register = async (req, res) => {
             firstname,
             lastname,
             email,
+            mobile,
             otp,
             otpExpires
         });
@@ -122,9 +123,9 @@ exports.login = async (req, res) => {
             payload,
             process.env.JWT_SECRET,
             { expiresIn: 3600 },
-            (err, token) => {
+            (err) => {
                 if (err) throw err;
-                res.json({ token });
+                res.json({ msg :"Login Successfull",firstname:`${user.firstname}`,lastname:`${user.lastname}`,email:`${user.email}`});
             }
         );
     } catch (err) {
@@ -154,7 +155,7 @@ exports.forgotPassword = async (req, res) => {
         await user.save();  // Save the user before sending the email
 
         // Send OTP email
-        sendMail(email, 'Password Reset OTP', `Your OTP code is ${otp}`);
+        sendMail(email, 'Password Reset OTP', 'Your OTP code is ${otp}');
 
         res.status(200).json({ msg: 'OTP sent to email',errorCode: "200" });
     } catch (err) {
