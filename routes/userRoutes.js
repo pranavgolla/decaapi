@@ -6,7 +6,7 @@ const contentController = require("../controllers/contentController");
 const servicesController = require("../controllers/servicesController");
 
 router.post("/createContent", contentController.createContent);
-router.get("/content", contentController.getAllContent);
+router.get("/contents", contentController.getAllContent);
 router.get("/contents/:id", contentController.getContentById);
 
 router.post("/sc", servicesController.createServices);
